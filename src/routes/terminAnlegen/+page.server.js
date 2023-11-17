@@ -31,15 +31,15 @@ export const load = async () =>{
     const patientData = await fetchPatient();
 
     // Logge den Wert von loadedData in der Konsole
-  console.log('loadedData:', { drugs: drugsData });
-  console.log('loadedData:', {got : gotData})
+  //console.log('loadedData:', { drugs: drugsData });
+  //console.log('loadedData:', {got : gotData})
   console.log('loadedData:', { patient : patientData})
 
     //return um daten weiter zu verabreiten
 
     return{
         drugs : drugsData,
-        got : gotData,
-        patient : patientData,
+        gots : gotData,
+        patients : patientData,
     }
 }

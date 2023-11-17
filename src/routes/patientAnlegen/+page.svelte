@@ -1,11 +1,10 @@
 
 <script>
-    import { Input, Label, Button, Select,
+  import { Input, Label, Button, Select,
       TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch } from 'flowbite-svelte';
-    import '../standart.css';
-    
-    let selected;
-  let tierart = [
+  import '../standart.css'; 
+  let selectedAnimalType;
+  let animalType = [
     { value: 'Pferd', name: 'Pferd' },
     { value: 'Hausequiden', name: 'Hausequiden' },
     { value: 'Kameliden', name: 'Kameliden' },
@@ -32,14 +31,79 @@
     { value: 'Fische', name: 'Fische' },
     { value: 'Nicht domestizierte Tiere', name: 'Nicht domestizierte Tiere (wilde Tiere)' }
   ];
-    
   let searchTerm = '';
-  let items = [
-  { id: 1, firstname:'Max' , lastname : 'Musterman' , street: 'testhausen' , houseNr : 22},
-  { id: 1, firstname:'Lisa' , lastname : 'Mayer' , street: 'testhausen' , houseNr : 21}
-  ];
-  $: filteredItems = items.filter((item) => item.lastname.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
-let selectedItem ={};
+  export let data;
+  const {owner} = data;
+  $: filteredOwner = owner.filter((item) => item.lastName.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
+  let selectedItem ={};
+
+  //Variabelen für den Patienten
+  let species = '';
+  let name = '';
+  let identNumber = '';
+  let ownerID = '';
+  let ownerLastName = '';
+  let ownerFirstName = '';
+  let ownerPlace = '';
+  let ownerZipCode = '';
+  let ownerStreet = '';
+  let ownerHouseNumber = '';
+  let ownerEmail = '';
+  let ownerPhoneNumber = '';
+
+  $: {
+    ownerID = selectedItem.ownerID ;
+    ownerLastName = selectedItem.firstName
+    ownerLastName = selectedItem.lastName
+    ownerPlace = selectedItem.place;
+    ownerZipCode = selectedItem.zipCode;
+    ownerStreet = selectedItem.street ;
+    ownerPhoneNumber = selectedItem.phoneNumber;
+    ownerEmail = selectedItem.email;
+    ownerHouseNumber = selectedItem.houseNumber;
+  }
+
+  const patientAnlegen = async () =>{
+
+    try{
+      const patientData = {
+        species,
+        name,
+        identNumber,
+        ownerID,
+        ownerLastName,
+        ownerFirstName,
+        ownerPlace,
+        ownerZipCode,
+        ownerStreet,
+        ownerHouseNumber,
+        ownerEmail,
+        ownerPhoneNumber
+      };
+      console.log('Anfrage Body:', patientData);
+      const response = await fetch(`http://131.173.88.199:8080/REST-1.0-SNAPSHOT/api/patient/create`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(patientData),
+      });
+
+      if (response.ok) {
+        // Erfolgreiche Antwort vom Server
+        console.log('Daten erfolgreich gesendet!');
+        
+        // Hier die Navigation durchführen
+        window.location.href = '../patientAnlegen';
+      } else {
+        // Fehlerhafte Antwort vom Server
+        console.error('Fehler beim Senden der Daten:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Fehler beim Senden der Daten:', error);
+    }
+  };
+
 
 </script>
 <header>
@@ -55,18 +119,18 @@ let selectedItem ={};
     <div  >
         <Label>
             Tierart wählen
-            <Select   items={tierart} bind:value={selected} />
+            <Select   items={animalType} bind:value={species} />
         </Label>
     
         <br>
 
         <Label  for="tiername">Tiername</Label>
-        <Input type="text" id="tiername"  required />
+        <Input type="text" id="tiername" bind:value ={name} required />
     
         <br>
     
         <Label for="idn-nr" >Ident Nr.</Label>
-        <Input type="text" id="idn-nr"  required />
+        <Input type="text" id="idn-nr" bind:value ={identNumber} required />
     
         <br><br>
         
@@ -82,13 +146,13 @@ let selectedItem ={};
               <TableHeadCell>Hausnummer</TableHeadCell>
             </TableHead>
               <TableBody >
-                {#each filteredItems as item}
+                {#each filteredOwner as item}
                   <TableBodyRow style=" max-height: 100px; overflow-y: auto;" on:click={() => selectedItem = item}>
-                    <TableBodyCell>{item.id}</TableBodyCell>
-                    <TableBodyCell>{item.firstname}</TableBodyCell>
-                    <TableBodyCell>{item.lastname}</TableBodyCell>
+                    <TableBodyCell>{item.ownerID}</TableBodyCell>
+                    <TableBodyCell>{item.firstName}</TableBodyCell>
+                    <TableBodyCell>{item.lastName}</TableBodyCell>
                     <TableBodyCell>{item.street}</TableBodyCell>
-                    <TableBodyCell>{item.houseNr}</TableBodyCell>
+                    <TableBodyCell>{item.houseNumber}</TableBodyCell>
                   </TableBodyRow>
                 {/each}
               </TableBody>
@@ -109,19 +173,19 @@ let selectedItem ={};
     
       <div>
         <Label for="itemMaker" >Vorname</Label>
-        <Input type="text" id="itemMaker" bind:value={selectedItem.firstname} readonly />
+        <Input type="text" id="itemMaker" bind:value={selectedItem.firstName} readonly />
       </div>
 
       <div>
         <Label for="itemMaker" >Nachname</Label>
-        <Input type="text" id="itemMaker" bind:value={selectedItem.lastname} readonly />
+        <Input type="text" id="itemMaker" bind:value={selectedItem.lastName} readonly />
       </div>
       
     </div>
     
     <br><br>
 
-    <Button type="submit" style="min-width: 50%; ">Patienten anlegen</Button>
+    <Button type="submit" style="min-width: 50%;" on:click = {patientAnlegen}>Patienten anlegen</Button>
     
   
 

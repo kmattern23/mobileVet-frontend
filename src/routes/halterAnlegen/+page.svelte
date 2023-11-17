@@ -18,7 +18,7 @@ let phoneNumber = '';
 
 const halterAnlegen = async () => {
     try {
-      const formData = {
+      const ownerData = {
         lastName,
         firstName,
         place,
@@ -29,13 +29,13 @@ const halterAnlegen = async () => {
         phoneNumber
       };
 
-      console.log('Anfrage Body:', formData);
+      console.log('Anfrage Body:', ownerData);
       const response = await fetch(`http://131.173.88.199:8080/REST-1.0-SNAPSHOT/api/owner/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(ownerData),
       });
 
       if (response.ok) {

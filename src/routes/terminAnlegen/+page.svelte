@@ -8,22 +8,75 @@ import '../standart.css';
 export let data;
 
 const {drugs} = data;
-const {got} = data;
-const {patient} = data;
+const {gots} = data;
+const {patients} = data;
 
-let itemHalter =[
-        {id: 1, vorname:'Max', nachname :'Mustermann'}
-    ];
-let patienten = [
-  { id: 1, tierart:'Pferd' , tiername : 'Rex' , identNr: 1345 , halterVorname : itemHalter[0].vorname , halterNachname : itemHalter[0].nachname}
-  
-]; let searchTerm = '';
-$: filteredPatienten = patienten.filter((item) => item.tiername.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
-$: filteredTaetigkeiten = got.filter((item) => item.description.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
+let searchTerm = '';
+$: filteredPatienten = patients.filter((item) => item.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
+$: filteredTaetigkeiten = gots.filter((item) => item.description.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
 $: filteredMedikamente = drugs.filter((item) => item.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
 let selectedPatient ={};
 let selectedTätigkeit = [];
 let selectedMedikament = [];
+
+let currentDate= new Date();
+let date = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+let picturePath = ''; 
+let diagnose = ''; 
+let got = [...selectedTätigkeit];
+let patient = ''; 
+let usedDrugs = [...selectedMedikament]; 
+let vetID = 1; 
+let lastName = 'Doe'; 
+let firstName = 'John';
+
+  
+$: {
+    patient = selectedPatient.patientID
+  }
+
+
+
+
+const terminAnlegen = async () =>{
+  try {
+      const terminData = {
+        date,
+        picturePath,
+        diagnose,
+        got,
+        patient,
+        usedDrugs,
+        vetID,
+        lastName,
+        firstName,
+
+      };
+
+      console.log('Anfrage Body:', terminData);
+      const response = await fetch(`http://131.173.88.199:8080/REST-1.0-SNAPSHOT/api/appointment/create`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(terminData),
+        
+      });
+
+      if (response.ok) {
+        // Erfolgreiche Antwort vom Server
+        console.log('Daten erfolgreich gesendet!');
+        
+        // Hier die Navigation durchführen
+        window.location.href = '../patientAnlegen';
+      } else {
+        // Fehlerhafte Antwort vom Server
+        console.error('Fehler beim Senden der Daten:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Fehler beim Senden der Daten:', error);
+    }
+}
 
   
 
@@ -82,28 +135,7 @@ const showFiles = (files) => {
     <br>
     <div>
         <h2>Patienten auswählen</h2>
-    </div>
-
-    <!--  private long patientID;
-    private String species;
-    private String name;
-    private long identNumber;
-    private Owner owner;
-  
-  public class OwnerTO {
-    private long ownerID;
-    private String lastName;
-    private String firstName;
-    private String place;
-    private String zipCode;
-    private String street;
-    private String houseNumber;
-    private String email;
-    private String phoneNumber;
-  
-  noch nicht fertig -->
-
-    
+    </div>    
     <br>        
     <div class="container">
         <TableSearch placeholder="suche nach Tiername" hoverable={true} bind:inputValue={searchTerm}>
@@ -122,8 +154,8 @@ const showFiles = (files) => {
                     <TableBodyCell>{item.species}</TableBodyCell>
                     <TableBodyCell>{item.name}</TableBodyCell>
                     <TableBodyCell>{item.identNumber}</TableBodyCell>
-                    <TableBodyCell>{item.owner.name}</TableBodyCell>
-                    <TableBodyCell>{item.halterNachname}</TableBodyCell>
+                    <TableBodyCell>{item.ownerFirstName}</TableBodyCell>
+                    <TableBodyCell>{item.ownerLastName}</TableBodyCell>
                   </TableBodyRow>
                 {/each}
               </TableBody>
@@ -135,28 +167,28 @@ const showFiles = (files) => {
     
         <div style="max-width: 70%;" >
           <Label >Tiername</Label>
-          <Input type="text" bind:value={selectedPatient.tiername} readonly />
+          <Input type="text" bind:value={selectedPatient.name} readonly />
         </div>
   
         <div style="max-width: 70%;">
           <Label >Tierart</Label>
-          <Input type="text"bind:value={selectedPatient.tierart} readonly />
+          <Input type="text"bind:value={selectedPatient.species} readonly />
         </div>
         <div style="max-width: 70%;">
             <Label  >Vorname des Halters</Label>
-            <Input type="text" bind:value={selectedPatient.halterVorname} readonly />
+            <Input type="text" bind:value={selectedPatient.ownerFirstName} readonly />
         </div>
         
         <div style="max-width: 70%;">
             <Label >Nachname des Haltern</Label>
-            <Input type="text" bind:value={selectedPatient.halterNachname} readonly />
+            <Input type="text" bind:value={selectedPatient.ownerLastName} readonly />
         </div>
     </div>
 
     <br>
 
     <Label for="textarea-id" class="mb-2">Diagnose</Label>
-    <Textarea id="textarea-id" placeholder="Hier die Dieagnose des Patienten eintragen" rows="5" name="message" />
+    <Textarea id="textarea-id" placeholder="Hier die Dieagnose des Patienten eintragen" rows="5" name="message" bind:value = {diagnose} />
 
     <br><br>
     <h2>Tätigkeiten</h2>
@@ -321,6 +353,6 @@ const showFiles = (files) => {
 </div>
 <br><br>
 
-<Button type="submit" style="min-width: 50%; ">Termin anlegen</Button>
+<Button type="submit" style="min-width: 50%; " on:click = {terminAnlegen}>Termin anlegen</Button>
    
 </form>
