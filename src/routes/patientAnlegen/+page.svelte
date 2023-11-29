@@ -53,7 +53,7 @@
 
   $: {
     ownerID = selectedItem.ownerID ;
-    ownerLastName = selectedItem.firstName
+    ownerFirstName = selectedItem.firstName
     ownerLastName = selectedItem.lastName
     ownerPlace = selectedItem.place;
     ownerZipCode = selectedItem.zipCode;
