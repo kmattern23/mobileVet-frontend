@@ -33,6 +33,7 @@ const halterAnlegen = async () => {
       const response = await fetch(`http://131.173.88.199:8080/REST-1.0-SNAPSHOT/api/owner/create`, {
         method: 'POST',
         headers: {
+          'Authorization': sessionStorage.getItem('token'),
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(ownerData),
@@ -41,6 +42,7 @@ const halterAnlegen = async () => {
       if (response.ok) {
         // Erfolgreiche Antwort vom Server
         console.log('Daten erfolgreich gesendet!');
+       
         
         // Hier die Navigation durchführen
         window.location.href = '../patientAnlegen';

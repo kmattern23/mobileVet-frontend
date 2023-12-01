@@ -22,9 +22,22 @@
     });
 
     if (response.ok) {
-      console.log(response.headers.get('Authorization'))
-      const token = response.headers.get('Authorization');
       
+      
+      const token = response.headers.get('Authorization');
+      const rolle = response.headers.get('vetID')
+
+      //console.log(token)
+      //console.log(rolle)
+      sessionStorage.setItem('token', token);
+      sessionStorage.setItem('rolle', rolle);
+      
+      if(rolle === '1'){
+        window.location.href ='/menueTierarzt';
+      }else{
+        window.location.href= '/menueRechnungsmitarbeiter';
+      }
+      console.log('VetID', rolle)
       console.log('Bearer-Token:', token)
   
     } else {
@@ -35,8 +48,19 @@
   }
 };
 
-
+const handleKeyDown = (event) => {
+  if (event.key === "Enter") {
+    handleSubmit(event);
+  }
+};
+$: {
+  
+  window.addEventListener('keydown', handleKeyDown);
+}   
+ 
 </script>
+
+
 
 <svelte:head>
     <title>Die mobile Tierarztpraxis</title>
@@ -61,6 +85,7 @@
 
     <h1 class="titel" style = "border-radius: 15px; " > Die mobile Tierarztpraxis</h1>
     <br><br> 
+    
     <div>
         <Label for="login" >Login-ID</Label>
         <Input type="text" id="login" style="width: 200px;" autocomplete="off" required bind:value={username}/>

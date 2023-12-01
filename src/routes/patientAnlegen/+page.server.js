@@ -16,7 +16,7 @@ export const load = async() =>{
     const ownerData = await fetchOwner();
 
     // consolen ausgabe
-   // console.log('loadedData:' , {owner : ownerData});
+   console.log('loadedData:' , {owner : ownerData});
 
     return{
         owner: ownerData,

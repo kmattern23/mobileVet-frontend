@@ -1,9 +1,8 @@
-
 <script>
   import { Input, Label, Button, Select,
       TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch } from 'flowbite-svelte';
   import '../standart.css'; 
-  let selectedAnimalType;
+  
   let animalType = [
     { value: 'Pferd', name: 'Pferd' },
     { value: 'Hausequiden', name: 'Hausequiden' },
@@ -42,25 +41,9 @@
   let name = '';
   let identNumber = '';
   let ownerID = '';
-  let ownerLastName = '';
-  let ownerFirstName = '';
-  let ownerPlace = '';
-  let ownerZipCode = '';
-  let ownerStreet = '';
-  let ownerHouseNumber = '';
-  let ownerEmail = '';
-  let ownerPhoneNumber = '';
-
   $: {
     ownerID = selectedItem.ownerID ;
-    ownerFirstName = selectedItem.firstName
-    ownerLastName = selectedItem.lastName
-    ownerPlace = selectedItem.place;
-    ownerZipCode = selectedItem.zipCode;
-    ownerStreet = selectedItem.street ;
-    ownerPhoneNumber = selectedItem.phoneNumber;
-    ownerEmail = selectedItem.email;
-    ownerHouseNumber = selectedItem.houseNumber;
+   
   }
 
   const patientAnlegen = async () =>{
@@ -71,20 +54,14 @@
         name,
         identNumber,
         ownerID,
-        ownerLastName,
-        ownerFirstName,
-        ownerPlace,
-        ownerZipCode,
-        ownerStreet,
-        ownerHouseNumber,
-        ownerEmail,
-        ownerPhoneNumber
+
       };
       console.log('Anfrage Body:', patientData);
       const response = await fetch(`http://131.173.88.199:8080/REST-1.0-SNAPSHOT/api/patient/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': sessionStorage.getItem('token')
         },
         body: JSON.stringify(patientData),
       });
@@ -190,8 +167,3 @@
   
 
 </form>
-
-
-
-
-
