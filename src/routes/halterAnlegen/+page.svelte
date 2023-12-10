@@ -5,55 +5,6 @@
        } from 'flowbite-svelte';
     import '../standart.css';
     
-
-
-let firstName = '';
-let lastName = '';
-let street = '';
-let houseNumber = '';
-let zipCode = '';
-let place = '';
-let email = '';
-let phoneNumber = '';
-
-const halterAnlegen = async () => {
-    try {
-      const ownerData = {
-        lastName,
-        firstName,
-        place,
-        zipCode,
-        street,
-        houseNumber,
-        email,
-        phoneNumber
-      };
-
-      console.log('Anfrage Body:', ownerData);
-      const response = await fetch(`http://131.173.88.199:8080/REST-1.0-SNAPSHOT/api/owner/create`, {
-        method: 'POST',
-        headers: {
-          'Authorization': sessionStorage.getItem('token'),
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(ownerData),
-      });
-
-      if (response.ok) {
-        // Erfolgreiche Antwort vom Server
-        console.log('Daten erfolgreich gesendet!');
-       
-        
-        // Hier die Navigation durchführen
-        window.location.href = '../patientAnlegen';
-      } else {
-        // Fehlerhafte Antwort vom Server
-        console.error('Fehler beim Senden der Daten:', response.statusText);
-      }
-    } catch (error) {
-      console.error('Fehler beim Senden der Daten:', error);
-    }
-  };
 </script>
 
 
@@ -66,15 +17,15 @@ const halterAnlegen = async () => {
   
   <br><br>
 
-  <form style="margin-left: 5%; max-width: 50%;">
+  <form style="margin-left: 5%; max-width: 50%;" method="POST">
 
     <div style="max-width: 50%;">
         <Label  for="firstname">Vorname</Label>
-        <Input type="text" id="firstname" bind:value ={firstName}  required />
+        <Input type="text" id="firstname" name="firstName" required />
 
         <br>
         <Label  for="lastname">Nachname</Label>
-        <Input type="text" id="lastname" bind:value ={lastName}   required />   
+        <Input type="text" id="lastname" name = "lastName"   required />   
     </div>
 
     <br>
@@ -84,22 +35,22 @@ const halterAnlegen = async () => {
 
         <div style="max-width: 80%;">
             <Label  for="street">Straße</Label>
-            <Input type="text" id="street" bind:value ={street}  required />
+            <Input type="text" id="street" name="street"  required />
         </div>
 
         <div style="max-width: 80%;">
             <Label  for="housnr">Haus-Nr</Label>
-            <Input  id="housnr" bind:value ={houseNumber}  required />
+            <Input  id="housnr" name="houseNumber"  required />
         </div>
 
         <div style="max-width: 80%;">
             <Label  for="plz">Postleitzahl</Label>
-            <Input id="plz" bind:value={zipCode}  required />
+            <Input id="plz" name="zipCode"  required />
         </div>
 
         <div style="max-width: 80%;">
             <Label  for="ort">Ort</Label>
-            <Input type="text" id="ort" bind:value ={place}   required />
+            <Input type="text" id="ort" name="place"  required />
         </div>
     </div>
     <br>
@@ -109,19 +60,19 @@ const halterAnlegen = async () => {
 
         <div style="max-width: 80%;">
             <Label  for="email">E-Mail Adresse</Label>
-            <Input type="email" id="email" bind:value ={email}   required />
+            <Input type="email" id="email" name="email"   required />
         </div>
 
         <div style="max-width: 80%;">
             <Label  for="phone">Tel. Nr</Label>
-            <Input  id="phone" bind:value ={phoneNumber}   required />
+            <Input  id="phone" name="phoneNumber"   required />
         </div>
 
     </div>
     <br>
     <br>
 
-    <Button type="submit" style="min-width: 30%;" on:click={halterAnlegen}>
+    <Button type="submit" style="min-width: 30%;" >
         Halter anlegen
     </Button>
   </form>

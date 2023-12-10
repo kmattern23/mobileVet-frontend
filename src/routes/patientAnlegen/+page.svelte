@@ -2,7 +2,8 @@
   import { Input, Label, Button, Select,
       TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch } from 'flowbite-svelte';
   import '../standart.css'; 
-  
+ 
+
   let animalType = [
     { value: 'Pferd', name: 'Pferd' },
     { value: 'Hausequiden', name: 'Hausequiden' },
@@ -35,52 +36,7 @@
   const {owner} = data;
   $: filteredOwner = owner.filter((item) => item.lastName.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
   let selectedItem ={};
-
-  //Variabelen für den Patienten
-  let species = '';
-  let name = '';
-  let identNumber = '';
-  let ownerID = '';
-  $: {
-    ownerID = selectedItem.ownerID ;
-   
-  }
-
-  const patientAnlegen = async () =>{
-
-    try{
-      const patientData = {
-        species,
-        name,
-        identNumber,
-        ownerID,
-
-      };
-      console.log('Anfrage Body:', patientData);
-      const response = await fetch(`http://131.173.88.199:8080/REST-1.0-SNAPSHOT/api/patient/create`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': sessionStorage.getItem('token')
-        },
-        body: JSON.stringify(patientData),
-      });
-
-      if (response.ok) {
-        // Erfolgreiche Antwort vom Server
-        console.log('Daten erfolgreich gesendet!');
-        
-        // Hier die Navigation durchführen
-        window.location.href = '../patientAnlegen';
-      } else {
-        // Fehlerhafte Antwort vom Server
-        console.error('Fehler beim Senden der Daten:', response.statusText);
-      }
-    } catch (error) {
-      console.error('Fehler beim Senden der Daten:', error);
-    }
-  };
-
+  let species;  
 
 </script>
 <header>
@@ -92,22 +48,22 @@
 
 <br><br>
 
-<form style="margin-left:5%;  max-width: 50%;" >
+<form style="margin-left:5%;  max-width: 50%;"  method="POST">
     <div  >
-        <Label>
+        <Label >
             Tierart wählen
             <Select   items={animalType} bind:value={species} />
         </Label>
-    
+        <input type="hidden" name="species" value="{species}">
         <br>
 
         <Label  for="tiername">Tiername</Label>
-        <Input type="text" id="tiername" bind:value ={name} required />
+        <Input type="text" id="tiername" name="name" required />
     
         <br>
     
         <Label for="idn-nr" >Ident Nr.</Label>
-        <Input type="text" id="idn-nr" bind:value ={identNumber} required />
+        <Input type="text" id="idn-nr" name="identNumber" required />
     
         <br><br>
         
@@ -135,7 +91,7 @@
               </TableBody>
               <div slot="header">
                 <br>
-                <Button type="submit" style="min-width: 30%; " href= "../halterAnlegen">Halter anlegen</Button>
+                <Button  style="min-width: 30%; " href= "../halterAnlegen">Halter anlegen</Button>
               </div>
           </TableSearch>
         </div>
@@ -143,6 +99,12 @@
         <br><br>
        
           
+    </div>
+    <br>
+
+    <div style="max-width: 49%;">
+      <Label for="itemMaker" >Owner ID</Label>
+      <Input type="text" id="itemMaker" name="ownerID" bind:value={selectedItem.ownerID} readonly />
     </div>
     <br>
 
@@ -162,7 +124,7 @@
     
     <br><br>
 
-    <Button type="submit" style="min-width: 50%;" on:click = {patientAnlegen}>Patienten anlegen</Button>
+    <Button type="submit" style="min-width: 50%;" >Patienten anlegen</Button>
     
   
 

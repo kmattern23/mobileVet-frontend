@@ -1,127 +1,73 @@
 <script>
 
-import { Input, Label, Button, Select, Table,
-      TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch, Textarea,Dropzone  } from 'flowbite-svelte';
-import '../standart.css';
+  import { Input, Label, Button, Select, Table,
+        TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch, Textarea,Dropzone  } from 'flowbite-svelte';
+  import '../standart.css';
+  
 
+  export let data;
 
-export let data;
-
-const {drugs} = data;
-const {gots} = data;
-const {patients} = data;
-
-let searchTerm = '';
-$: filteredPatienten = patients.filter((item) => item.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
-$: filteredTaetigkeiten = gots.filter((item) => item.description.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
-$: filteredMedikamente = drugs.filter((item) => item.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
-let selectedPatient ={};
-let selectedTätigkeit = [];
-let selectedMedikament = [];
-
-let currentDate= new Date();
-let date = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-let picturePath = ''; 
-let diagnose = ''; 
-let got = [...selectedTätigkeit];
-let patient = ''; 
-let usedDrugs = [...selectedMedikament]; 
-let vetID = 1; 
-let lastName = 'Doe'; 
-let firstName = 'John';
+  const {drugs} = data;
+  const {gots} = data;
+  const {patients} = data;
 
   
-$: {
-    patient = selectedPatient.patientID
-  }
+
+  let searchTerm = '';
+  $: filteredPatienten = patients.filter((item) => item.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
+  $: filteredTaetigkeiten = gots.filter((item) => item.description.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
+  $: filteredMedikamente = drugs.filter((item) => item.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
+  let selectedPatient ={};
+  let selectedTaetigkeit = [];
+  let selectedMedikament = [];
+
+  let currentDate= new Date();
+  let date = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+  let formattedDate = date.toISOString().substring(0, 10);
 
 
-
-
-const terminAnlegen = async () =>{
-  try {
-      const terminData = {
-        date,
-        picturePath,
-        diagnose,
-        got,
-        patient,
-        usedDrugs,
-        vetID,
-        lastName,
-        firstName,
-
-      };
-
-      console.log('Anfrage Body:', terminData);
-      const response = await fetch(`http://131.173.88.199:8080/REST-1.0-SNAPSHOT/api/appointment/create`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': sessionStorage.getItem('token'),
-        },
-        body: JSON.stringify(terminData),
-        
+/* ---- BILD Dropbox---
+  let value = [];
+  const dropHandle = (event) => {
+    value = [];
+    event.preventDefault();
+    if (event.dataTransfer.items) {
+      [...event.dataTransfer.items].forEach((item, i) => {
+        if (item.kind === 'file') {
+          const file = item.getAsFile();
+          value.push(file.name);
+          value = value;
+        }
       });
-
-      if (response.ok) {
-        // Erfolgreiche Antwort vom Server
-        console.log('Daten erfolgreich gesendet!');
-        
-        // Hier die Navigation durchführen
-        window.location.href = '../patientAnlegen';
-      } else {
-        // Fehlerhafte Antwort vom Server
-        console.error('Fehler beim Senden der Daten:', response.statusText);
-      }
-    } catch (error) {
-      console.error('Fehler beim Senden der Daten:', error);
+    } else {
+      [...event.dataTransfer.files].forEach((file, i) => {
+        value = file.name;
+      });
     }
-}
+  };
 
-  
+  const handleChange = (event) => {
+    const files = event.target.files;
+    if (files.length > 0) {
+      value.push(files[0].name);
+      value = value;
+    }
+  };
 
-let value = [];
-const dropHandle = (event) => {
-  value = [];
-  event.preventDefault();
-  if (event.dataTransfer.items) {
-    [...event.dataTransfer.items].forEach((item, i) => {
-      if (item.kind === 'file') {
-        const file = item.getAsFile();
-        value.push(file.name);
-        value = value;
-      }
+  const showFiles = (files) => {
+    if (files.length === 1) return files[0];
+    let concat = '';
+    files.map((file) => {
+      concat += file;
+      concat += ',';
+      concat += ' ';
     });
-  } else {
-    [...event.dataTransfer.files].forEach((file, i) => {
-      value = file.name;
-    });
-  }
-};
 
-const handleChange = (event) => {
-  const files = event.target.files;
-  if (files.length > 0) {
-    value.push(files[0].name);
-    value = value;
-  }
-};
-
-const showFiles = (files) => {
-  if (files.length === 1) return files[0];
-  let concat = '';
-  files.map((file) => {
-    concat += file;
-    concat += ',';
-    concat += ' ';
-  });
-
-  if (concat.length > 40) concat = concat.slice(0, 40);
-  concat += '...';
-  return concat;
-};
-
+    if (concat.length > 40) concat = concat.slice(0, 40);
+    concat += '...';
+    return concat;
+  };
+*/
 </script>
 
 <h1 class = "titel">Behandlungstermin anlegen</h1>
@@ -131,7 +77,7 @@ const showFiles = (files) => {
     </nav>
 </header>
 
-<form style="margin-left: 2%; max-width : 75%">
+<form style="margin-left: 2%; max-width : 75%" method="POST">
    
     <br>
     <div>
@@ -163,6 +109,9 @@ const showFiles = (files) => {
             
           </TableSearch>
     </div>
+    <!-- Patient ID unnd Datum an Serverseite übergeben-->
+    <input type="hidden" name="selectedPatientId" value="{selectedPatient.patientID}">
+    <input type="hidden" name="date" value="{formattedDate}">
 
     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
     
@@ -189,11 +138,11 @@ const showFiles = (files) => {
     <br>
 
     <Label for="textarea-id" class="mb-2">Diagnose</Label>
-    <Textarea id="textarea-id" placeholder="Hier die Dieagnose des Patienten eintragen" rows="5" name="message" bind:value = {diagnose} />
+    <Textarea id="textarea-id" placeholder="Hier die Dieagnose des Patienten eintragen" rows="5" name="diagnose" />
 
     <br><br>
     <h2>Tätigkeiten</h2>
-
+    <br>
     <div class="container">
         <TableSearch placeholder="suche nach Grundleistung" hoverable={true} bind:inputValue={searchTerm}>
             <TableHead>
@@ -217,9 +166,30 @@ const showFiles = (files) => {
                     </TableBodyCell>
                     <TableBodyCell>
                         <Button on:click={() => {
-                            selectedTätigkeit.push(item);
-                            selectedTätigkeit = [...selectedTätigkeit];
-                            item.selectedOption = '';
+
+                        let price;
+                        let option;
+                        if (item.selectedOption === 'einfach') {
+                            price = item.price1;
+                            option = 1;
+                        } else if (item.selectedOption === 'zweifach') {
+                            price = item.price2;
+                            option = 2;
+                        } else if (item.selectedOption === 'dreifach') {
+                            price = item.price3;
+                            option = 3;
+                        }
+                        selectedTaetigkeit.push({
+                                  gotID: item.gotID,
+                                  description: item.description,
+                                  option: option,
+                                  price : price
+                        });
+                          selectedTaetigkeit = [...selectedTaetigkeit];
+                          
+                          console.log(selectedTaetigkeit);  
+                              
+                        item.selectedOption = '';
                              }} disabled={!item.selectedOption}>Hinzufügen</Button>
                       </TableBodyCell>
                   </TableBodyRow>
@@ -228,7 +198,9 @@ const showFiles = (files) => {
             
           </TableSearch>
     </div>
-
+    <!-- Übergeben der Array an die Serverseite dürch das Form Element-->
+    <input type="hidden" name="selectedTaetigkeiten" value="{JSON.stringify(selectedTaetigkeit)}">
+    
     <br>
     <h3> geleistete Tätigkeiten</h3>
     <div class="container">
@@ -239,7 +211,7 @@ const showFiles = (files) => {
                 <TableHeadCell>Kosten</TableHeadCell>
             </TableHead>
             <TableBody >
-                {#each selectedTätigkeit as item }
+                {#each selectedTaetigkeit as item }
                 <TableBodyRow>
                     <TableBodyCell>
                       {item.gotID}
@@ -248,14 +220,16 @@ const showFiles = (files) => {
                       {item.description}
                     </TableBodyCell>
                     <TableBodyCell>
-                      {item.selectedOption === 'einfach' ? item.price1 : (item.selectedOption === 'zweifach' ? item.price2 : item.price3)} &euro;
+                      {item.price} &euro;
                     </TableBodyCell>
                     <TableBodyCell>
                       <Button on:click={() => {
-                        const index = selectedTätigkeit.indexOf(item);
+                        const index = selectedTaetigkeit.indexOf(item);
+                        
                         if (index !== -1) {
-                          selectedTätigkeit.splice(index, 1);
-                          selectedTätigkeit = [...selectedTätigkeit];
+                          selectedTaetigkeit.splice(index, 1);
+                          selectedTaetigkeit = [...selectedTaetigkeit];
+                         
                         }
                       }}>Entfernen</Button>
                     </TableBodyCell>
@@ -284,7 +258,7 @@ const showFiles = (files) => {
                       <Button on:click={() => {
                           selectedMedikament.push(item);
                           selectedMedikament = [...selectedMedikament];
-                          item.selectedOption = '';
+                          
                            }}>Hinzufügen</Button>
                     </TableBodyCell>
                 </TableBodyRow>
@@ -293,6 +267,7 @@ const showFiles = (files) => {
           
         </TableSearch>
   </div>
+  <input type="hidden" name="selectedDrugs" value="{JSON.stringify(selectedMedikament)}">
   <br>
   <h3>Verschriebene Medikamente</h3>
   <br>
@@ -329,7 +304,7 @@ const showFiles = (files) => {
         </TableBody>
     </Table>
 </div>
-
+<!--
 <br>
 <h2>Bild Hinzufügen</h2>
 <br>
@@ -353,7 +328,7 @@ const showFiles = (files) => {
 
 </div>
 <br><br>
-
-<Button type="submit" style="min-width: 50%; " on:click = {terminAnlegen}>Termin anlegen</Button>
+-->
+<Button type="submit" style="min-width: 50%; ">Termin anlegen</Button>
    
 </form>
