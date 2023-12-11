@@ -1,22 +1,20 @@
 <script>
 
   import { Input, Label, Button, Select, Table,
-        TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch, Textarea,Dropzone  } from 'flowbite-svelte';
+        TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch, Textarea,Fileupload  } from 'flowbite-svelte';
   import '../standart.css';
-  
-
   export let data;
 
   const {drugs} = data;
   const {gots} = data;
   const {patients} = data;
 
-  
-
-  let searchTerm = '';
-  $: filteredPatienten = patients.filter((item) => item.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
-  $: filteredTaetigkeiten = gots.filter((item) => item.description.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
-  $: filteredMedikamente = drugs.filter((item) => item.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
+  let searchTermTaetigkeit = '';
+  let searchTermDrug = '';
+  let searchTermPatient = '';
+  $: filteredPatienten = patients.filter((item) => item.name.toLowerCase().indexOf(searchTermPatient.toLowerCase()) !== -1);
+  $: filteredTaetigkeiten = gots.filter((item) => item.description.toLowerCase().indexOf(searchTermTaetigkeit.toLowerCase()) !== -1);
+  $: filteredMedikamente = drugs.filter((item) => item.name.toLowerCase().indexOf(searchTermDrug.toLowerCase()) !== -1);
   let selectedPatient ={};
   let selectedTaetigkeit = [];
   let selectedMedikament = [];
@@ -25,49 +23,19 @@
   let date = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
   let formattedDate = date.toISOString().substring(0, 10);
 
-
-/* ---- BILD Dropbox---
-  let value = [];
-  const dropHandle = (event) => {
-    value = [];
-    event.preventDefault();
-    if (event.dataTransfer.items) {
-      [...event.dataTransfer.items].forEach((item, i) => {
-        if (item.kind === 'file') {
-          const file = item.getAsFile();
-          value.push(file.name);
-          value = value;
-        }
-      });
-    } else {
-      [...event.dataTransfer.files].forEach((file, i) => {
-        value = file.name;
-      });
+// bild hinzufügen 
+let image;
+  function handleImageUpload(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        image = reader.result; 
+      };
+      reader.readAsDataURL(file);
+      
     }
-  };
 
-  const handleChange = (event) => {
-    const files = event.target.files;
-    if (files.length > 0) {
-      value.push(files[0].name);
-      value = value;
-    }
-  };
-
-  const showFiles = (files) => {
-    if (files.length === 1) return files[0];
-    let concat = '';
-    files.map((file) => {
-      concat += file;
-      concat += ',';
-      concat += ' ';
-    });
-
-    if (concat.length > 40) concat = concat.slice(0, 40);
-    concat += '...';
-    return concat;
-  };
-*/
 </script>
 
 <h1 class = "titel">Behandlungstermin anlegen</h1>
@@ -85,7 +53,7 @@
     </div>    
     <br>        
     <div class="container">
-        <TableSearch placeholder="suche nach Tiername" hoverable={true} bind:inputValue={searchTerm}>
+        <TableSearch placeholder="suche nach Tiername" hoverable={true} bind:inputValue={searchTermPatient}>
             <TableHead>
               <TableHeadCell>ID</TableHeadCell>
               <TableHeadCell>Tierart</TableHeadCell>
@@ -144,7 +112,7 @@
     <h2>Tätigkeiten</h2>
     <br>
     <div class="container">
-        <TableSearch placeholder="suche nach Grundleistung" hoverable={true} bind:inputValue={searchTerm}>
+        <TableSearch placeholder="suche nach Grundleistung" hoverable={true} bind:inputValue={searchTermTaetigkeit}>
             <TableHead>
               <TableHeadCell>GOT Nr</TableHeadCell>
               <TableHeadCell>Grundleistung</TableHeadCell>
@@ -242,7 +210,7 @@
     <h2>Medikamente</h2>
     <br>
     <div class="container">
-      <TableSearch placeholder="suche nach Bezeichnung" hoverable={true} bind:inputValue={searchTerm}>
+      <TableSearch placeholder="suche nach Bezeichnung" hoverable={true} bind:inputValue={searchTermDrug}>
           <TableHead>
             <TableHeadCell>Medikamenten ID</TableHeadCell>
             <TableHeadCell>Beziechnung</TableHeadCell>
@@ -304,31 +272,27 @@
         </TableBody>
     </Table>
 </div>
-<!--
+
 <br>
 <h2>Bild Hinzufügen</h2>
 <br>
+<!-- bild hinzufügen-->
 
-<div style="max-width: 50%;">
-  <Dropzone
-  id="dropzone"
-  on:drop={dropHandle}
-  on:dragover={(event) => {
-    event.preventDefault();
-  }}
-  on:change={handleChange} >
-  <svg aria-hidden="true" class="mb-3 w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
-  {#if value.length === 0}
-    <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-    <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-  {:else}
-    <p>{showFiles(value)}</p>
-  {/if}
-</Dropzone>
 
-</div>
+<Label class="space-y-2 mb-2">
+  <span>Upload file</span>
+  <Fileupload type="file"  accept="image/*" on:change={handleImageUpload} />
+
+</Label>
+{#if image}
+  <img src={image} alt="Uploaded preview" />
+{:else}
+  <p>No image uploaded yet</p>
+{/if}
+
+<input type="hidden" name="image" value="{image}">
 <br><br>
--->
+
 <Button type="submit" style="min-width: 50%; ">Termin anlegen</Button>
    
 </form>
