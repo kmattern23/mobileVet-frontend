@@ -24,7 +24,7 @@
   let formattedDate = date.toISOString().substring(0, 10);
 
 // bild hinzufügen 
-let image;
+let image = null ;
   function handleImageUpload(event) {
       const file = event.target.files?.[0];
       if (!file) return;

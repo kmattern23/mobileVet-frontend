@@ -12,7 +12,7 @@
     </nav>
 </header>
 
-<form style="margin-left: 2%; max-width : 75%">
+<form style="margin-left: 2%; max-width : 75%" method="POST">
     
     
     <br><br><br>
@@ -20,12 +20,12 @@
      
         <div style="max-width: 50%;">
             <label for="startDate">Startdatum:</label>
-            <Input type="date" id ="startDate" />
+            <Input type="date" name="startDate" id ="startDate" />
         </div>
 
         <div style="max-width: 50%;">
             <label for="endDate">Enddatum:</label>
-            <Input type="date" id ="endDate" />
+            <Input type="date" name="endDate" id ="endDate" />
         </div>
        
     </div>
@@ -52,5 +52,10 @@
             </TableBody>
         </Table>
     </div>
-    
+    <br><br>
+    <div style="max-width: 50%;">
+        <Button type="submit" style="min-width: 30%;" >
+            Offene Rechnungen anzeigen
+        </Button>
+    </div>
 </form>

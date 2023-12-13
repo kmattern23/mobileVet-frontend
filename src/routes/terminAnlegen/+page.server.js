@@ -64,9 +64,7 @@ export const load = async () =>{
 export const actions ={
     default : async ({request}) =>{
         const requestDataAppointent = await request.formData();
-
         console.log(requestDataAppointent)
-        console.log()
         let date = requestDataAppointent.get('date')
         let selectedTaetigkeiten  = []
         selectedTaetigkeiten = JSON.parse(requestDataAppointent.get('selectedTaetigkeiten'))
@@ -81,7 +79,10 @@ export const actions ={
         let drugIDs = drugs.map(item => item.drugID)
         let vetID = getVetID()
         let statusCode = false;   
+        console.log(image)
         
+        if ( image !== '') {
+
 
         // Convert base64 in Blob Object
         const base64Data = image.split(';base64,').pop();
@@ -127,6 +128,8 @@ export const actions ={
         } catch (error) {
             console.error('Fehler beim Senden der Daten:', error);
             }
+
+        }  
         try{
             const appointmentData ={
                 date,
@@ -161,5 +164,6 @@ export const actions ={
             if(statusCode == true){
                 throw redirect(303,'../menueTierarzt');
               }
+              
     }
 }
