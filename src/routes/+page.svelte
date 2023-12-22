@@ -2,10 +2,13 @@
   import './standart.css';
   import { Navbar,  NavLi, NavUl, NavHamburger } from 'flowbite-svelte';
   import { Input, Label,  Button } from 'flowbite-svelte';
- 
-
-
   
+
+  export let data;
+  const {status} = data;
+  if(status == false){
+    console.log('FALSCH')
+  }
 </script>
 
 
