@@ -2,7 +2,9 @@
     import '../standart.css';
     import { Button , Datepicker ,Input , Table ,TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell} from 'flowbite-svelte';
     let termine = [];
-    
+    export let data;
+
+    const {appointment} = data;
 </script>
 
 <h1 class = "titel">Rechnungen erstellen</h1>

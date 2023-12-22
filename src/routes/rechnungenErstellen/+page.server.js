@@ -1,25 +1,48 @@
-import {backend_url} from '$env/static/private';
+import { backend_url } from '$env/static/private';
 import fetch from 'node-fetch';
-import {  getToken } from '../authService.js';
-export const actions ={
-    default : async ({request})=>{
+import { getToken } from '../authService.js';
 
-        const requestDates = await request.formData();
-        console.log(requestDates);
+const base = backend_url;
 
-        let startDate = requestDates.get('startDate');
-        let endDate = requestDates.get('endDate')
+export const actions = {
+    default: async ({ request }) => {
+        try {
+            const requestDates = await request.formData();
+            console.log(requestDates);
 
-            const fetchOffeneRechnung = async() =>{
-                const result = await fetch(`${base}/getBilling/${startDate}/${endDate}`, {
+            let startDate = requestDates.get('startDate');
+            let endDate = requestDates.get('endDate');
+
+            const fetchOffeneRechnung = async () => {
+               // const result = await fetch(`${base}/billing/getBilling/${startDate}/${endDate}`, {
+                const result = await fetch(`${base}/appointment/getAll`, {
                     headers: {
                         'Authorization': getToken(),
                         'Content-Type': 'application/json',
-                      }
+                    }
                 });
-                const data = await result.json()
+                const data = await result.json();
                 return data;
             }
-          
+
+            const rechnungen = await fetchOffeneRechnung();
+
+            console.log(rechnungen)
+           // console.log(rechnungen.lastName);
+
+           rechnungen.forEach(rechnungen => {
+    const vetID = rechnungen.vetID;
+    console.log(`Vet ID: ${vetID}`);
+    
+});
+
+
+            
+            } catch (error) {
+            console.error('Error:', error);
+            return {
+                error: 'fetch anfrage fehlerhaft', 
+            };
+            }
     }
 }
