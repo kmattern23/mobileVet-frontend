@@ -16,3 +16,8 @@ export const setToken = (token) => {
 export const getToken = () => {
   return storedToken;
 };
+
+export const logout = () => {
+  storedToken = null;
+  
+};

@@ -44,9 +44,7 @@ let image = null ;
       <a style="margin-left:95%;" href="/" >Abmelden</a>
     </nav>
 </header>
-
 <form style="margin-left: 2%; max-width : 75%" method="POST">
-   
     <br>
     <div>
         <h2>Patienten auswählen</h2>
@@ -74,13 +72,11 @@ let image = null ;
                   </TableBodyRow>
                 {/each}
               </TableBody>
-            
           </TableSearch>
     </div>
     <!-- Patient ID unnd Datum an Serverseite übergeben-->
     <input type="hidden" name="selectedPatientId" value="{selectedPatient.patientID}">
     <input type="hidden" name="date" value="{formattedDate}">
-
     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
     
         <div style="max-width: 70%;" >
@@ -102,12 +98,9 @@ let image = null ;
             <Input type="text" bind:value={selectedPatient.ownerLastName} readonly />
         </div>
     </div>
-
     <br>
-
     <Label for="textarea-id" class="mb-2">Diagnose</Label>
     <Textarea id="textarea-id" placeholder="Hier die Dieagnose des Patienten eintragen" rows="5" name="diagnose" />
-
     <br><br>
     <h2>Tätigkeiten</h2>
     <br>
@@ -134,7 +127,6 @@ let image = null ;
                     </TableBodyCell>
                     <TableBodyCell>
                         <Button on:click={() => {
-
                         let price;
                         let option;
                         if (item.selectedOption === 'einfach') {
@@ -158,7 +150,7 @@ let image = null ;
                           console.log(selectedTaetigkeit);  
                               
                         item.selectedOption = '';
-                             }} disabled={!item.selectedOption}>Hinzufügen</Button>
+                             }} disabled={!item.selectedOption || selectedTaetigkeit.some(usedTaetigkeiten => usedTaetigkeiten.gotID === item.gotID)}>Hinzufügen</Button>
                       </TableBodyCell>
                   </TableBodyRow>
                 {/each}
@@ -168,7 +160,6 @@ let image = null ;
     </div>
     <!-- Übergeben der Array an die Serverseite dürch das Form Element-->
     <input type="hidden" name="selectedTaetigkeiten" value="{JSON.stringify(selectedTaetigkeit)}">
-    
     <br>
     <h3> geleistete Tätigkeiten</h3>
     <div class="container">
@@ -227,7 +218,9 @@ let image = null ;
                           selectedMedikament.push(item);
                           selectedMedikament = [...selectedMedikament];
                           
-                           }}>Hinzufügen</Button>
+                           }}
+                           disabled={selectedMedikament.some(usedDrug => usedDrug.drugID === item.drugID)}
+                           >Hinzufügen</Button>
                     </TableBodyCell>
                 </TableBodyRow>
               {/each}
@@ -272,13 +265,10 @@ let image = null ;
         </TableBody>
     </Table>
 </div>
-
 <br>
 <h2>Bild Hinzufügen</h2>
 <br>
 <!-- bild hinzufügen-->
-
-
 <Label class="space-y-2 mb-2">
   <span>Upload file</span>
   <Fileupload type="file"  accept="image/*" on:change={handleImageUpload} />
@@ -289,10 +279,10 @@ let image = null ;
 {:else}
   <p>No image uploaded yet</p>
 {/if}
-
 <input type="hidden" name="image" value="{image}">
 <br><br>
-
 <Button type="submit" style="min-width: 50%; ">Termin anlegen</Button>
+<br><br><br>
+<Button type="submit" style="min-width: 50%;" href="../menueTierarzt" >Hauptmenü</Button>
    
 </form>

@@ -8,7 +8,7 @@ const base = backend_url;
 // laden der owner
 
 export const load = async() =>{
-
+    
     const fetchOwner = async() =>{
         const result = await fetch(`${base}/owner/getAll`, {
             headers: {
@@ -17,6 +17,7 @@ export const load = async() =>{
               }
         });
         const data = await result.json();
+        
         return data;
     }
 

@@ -1,7 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import { getToken } from '../authService.js';
 
-
 export const actions ={
     default: async ({ request }) => {
         const reqeustDataOwner = await request.formData();

@@ -4,7 +4,7 @@
     let termine = [];
     export let data;
 
-    const {appointment} = data;
+    const {unbilledAppointment} = data;
 </script>
 
 <h1 class = "titel">Rechnungen erstellen</h1>
@@ -15,26 +15,19 @@
 </header>
 
 <form style="margin-left: 2%; max-width : 75%" method="POST">
-    
-    
     <br><br><br>
     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
-     
         <div style="max-width: 50%;">
             <label for="startDate">Startdatum:</label>
             <Input type="date" name="startDate" id ="startDate" />
         </div>
-
         <div style="max-width: 50%;">
             <label for="endDate">Enddatum:</label>
             <Input type="date" name="endDate" id ="endDate" />
         </div>
-       
     </div>
-
     <br><br><br>
-
-    <h2>Rechnungen erstellen für:</h2>
+    <h2>Offene Rechnungen:</h2>
     <br>
     <div class="container">
         <Table>
@@ -44,11 +37,12 @@
             <TableHeadCell>Patient</TableHeadCell>
           </TableHead>
             <TableBody >
-                {#each termine as item }
+                {#each unbilledAppointment as item }
                 <TableBodyRow>
-                    <TableBodyCell>{item.id}</TableBodyCell>
+                    <TableBodyCell>{item.appointmentID}</TableBodyCell>
                     <TableBodyCell>{item.date}</TableBodyCell>
-                    <TableBodyCell>{item.patient} &euro;</TableBodyCell>
+                    <TableBodyCell>{item.patient}</TableBodyCell>
+                    
                 </TableBodyRow>
                 {/each}
             </TableBody>
@@ -57,7 +51,12 @@
     <br><br>
     <div style="max-width: 50%;">
         <Button type="submit" style="min-width: 30%;" >
-            Offene Rechnungen anzeigen
+            Rechnungen erstellen
         </Button>
+        <br><br><br>
+        <Button type="submit" style="min-width: 30%;" href="../menueRechnungsmitarbeiter" >Hauptmenü</Button>
     </div>
+    
+
+
 </form>

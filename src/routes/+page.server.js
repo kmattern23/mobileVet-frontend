@@ -1,11 +1,6 @@
 import {  redirect } from '@sveltejs/kit';
 import { setVetID, getVetID, setToken } from './authService.js';
 
-
-
-
-
-
 export const actions = {
 	default: async ({  request }) => {
 		const loginData = await request.formData();
@@ -36,19 +31,18 @@ export const actions = {
               
             } else {
               console.error('Login fehlgeschlagen!');
-              
             }
         } catch (error) {
             console.error('Fehler beim Anmelden:', error);
         }
-
+        
         if (statusCode == true){
           if (getVetID() === '-1') {
             throw redirect(303,'/menueRechnungsmitarbeiter');
           } else {
             throw redirect(303,'/menueTierarzt');
         }
-
+        
         }
       
 	}

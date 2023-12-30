@@ -69,10 +69,12 @@
         </div>
 
     </div>
-    <br>
-    <br>
-
+    <br><br>
     <Button type="submit" style="min-width: 30%;" >
         Halter anlegen
+    </Button>
+    <br><br>
+    <Button type="submit" style="min-width: 30%;" href="../patientAnlegen">
+        Zurück
     </Button>
   </form>
