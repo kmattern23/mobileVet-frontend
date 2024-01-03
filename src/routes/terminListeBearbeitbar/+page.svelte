@@ -230,7 +230,7 @@
       <TableSearch placeholder="suche nach Bezeichnung" hoverable={true} bind:inputValue={searchTermDrug}>
           <TableHead>
             <TableHeadCell>Medikamenten ID</TableHeadCell>
-            <TableHeadCell>Beziechnung</TableHeadCell>
+            <TableHeadCell>Bezeichnung</TableHeadCell>
             <TableHeadCell>Kosten</TableHeadCell>
           </TableHead>
             <TableBody >
@@ -264,7 +264,7 @@
       <Table>
         <TableHead>
           <TableHeadCell>Medikamenten ID</TableHeadCell>
-          <TableHeadCell>Beziechnung</TableHeadCell>
+          <TableHeadCell>Bezeichnung</TableHeadCell>
           <TableHeadCell>Kosten</TableHeadCell>
         </TableHead>
           <TableBody >

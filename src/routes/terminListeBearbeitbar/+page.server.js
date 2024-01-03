@@ -9,7 +9,7 @@ const base = backend_url;
 
 export const load = async () => {
     const fetchUnbilledAppointments = async () =>{
-        const result = await fetch(`${base}/billing/getUnbilled`,{
+        const result = await fetch(`${base}/billing/getUnbilledVet`,{
             headers: {
                 'Authorization': getToken(),
                 'Content-Type': 'application/json',
@@ -19,6 +19,7 @@ export const load = async () => {
 
         return data;
     }
+    
      //laden der Medikamente
      const fetchDrugs = async() =>{
         const result = await fetch(`${base}/drug/getAll`, {
@@ -44,8 +45,9 @@ export const load = async () => {
     const drugsData = await fetchDrugs();
     const gotData = await fetchGOT();
     const unbilledAppointment = await fetchUnbilledAppointments();
-
+    
     //console.log(unbilledAppointment)
+    
     for (let i = 0; i < unbilledAppointment.length; i++) {
         const result = await fetch(`${base}/patient/get/${unbilledAppointment[i].patient}`,{
             headers: {
@@ -57,6 +59,7 @@ export const load = async () => {
         unbilledAppointment[i].patient = patientData
         //console.log(unbilledAppointment)
     }
+    
     return {
         unbilledAppointment : unbilledAppointment,
         drugs : drugsData,

@@ -1,7 +1,7 @@
 <script>
     import '../standart.css';
-    import { Button , Datepicker ,Input , Table ,TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell} from 'flowbite-svelte';
-    let termine = [];
+    import { Button ,Input , Table ,TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell} from 'flowbite-svelte';
+    
     export let data;
 
     const {unbilledAppointment} = data;
@@ -37,7 +37,7 @@
             <TableHeadCell>Patient</TableHeadCell>
           </TableHead>
             <TableBody >
-                {#each unbilledAppointment as item }
+                {#each unbilledAppointment as item}
                 <TableBodyRow>
                     <TableBodyCell>{item.appointmentID}</TableBodyCell>
                     <TableBodyCell>{item.date}</TableBodyCell>

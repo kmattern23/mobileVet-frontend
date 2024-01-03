@@ -19,9 +19,10 @@
   let selectedTaetigkeit = [];
   let selectedMedikament = [];
 
-  let currentDate= new Date();
-  let date = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-  let formattedDate = date.toISOString().substring(0, 10);
+ 
+let currentDate = new Date();
+let formattedDate = currentDate.toISOString().split('T')[0];
+console.log(formattedDate);
 
 // bild hinzufügen 
 let image = null ;
@@ -100,7 +101,7 @@ let image = null ;
     </div>
     <br>
     <Label for="textarea-id" class="mb-2">Diagnose</Label>
-    <Textarea id="textarea-id" placeholder="Hier die Dieagnose des Patienten eintragen" rows="5" name="diagnose" />
+    <Textarea id="textarea-id" placeholder="Hier die Diagnose des Patienten eintragen" rows="5" name="diagnose" />
     <br><br>
     <h2>Tätigkeiten</h2>
     <br>
@@ -204,7 +205,7 @@ let image = null ;
       <TableSearch placeholder="suche nach Bezeichnung" hoverable={true} bind:inputValue={searchTermDrug}>
           <TableHead>
             <TableHeadCell>Medikamenten ID</TableHeadCell>
-            <TableHeadCell>Beziechnung</TableHeadCell>
+            <TableHeadCell>Bezeichnung</TableHeadCell>
             <TableHeadCell>Kosten</TableHeadCell>
           </TableHead>
             <TableBody >
@@ -236,7 +237,7 @@ let image = null ;
     <Table>
       <TableHead>
         <TableHeadCell>Medikamenten ID</TableHeadCell>
-        <TableHeadCell>Beziechnung</TableHeadCell>
+        <TableHeadCell>Bezeichnung</TableHeadCell>
         <TableHeadCell>Kosten</TableHeadCell>
       </TableHead>
         <TableBody >
